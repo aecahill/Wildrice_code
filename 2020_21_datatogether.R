@@ -51,7 +51,7 @@ grp.b <- data.scores[datascores$Month == "August", ][chull(datascores[datascores
 grp.c <- data.scores[datascores$Month == "October", ][chull(datascores[datascores$Month == 
                                                                          "October", c("NMDS1", "NMDS2")]), ]
 hull.data <- rbind(grp.a, grp.b,grp.c) #turn the hulls into a single dataframe
-hull.month<-c("June","June","June","June","June","June","June","August","August","August","August","August","October","October","October","October","October","October","October") #add column for groups (these are based on this data only)
+hull.month<-c("June","June","June","June","June","June","June","August","August","August","August","August","August","October","October","October","October","October","October","October","October") #add column for groups (these are based on this data only)
 hull.data<-cbind(hull.data,hull.month) #attach group names to hull dataframe
 
 #plot in ggplot
@@ -126,7 +126,7 @@ grp.a <- data.scores[datascores$Rice == "Y", ][chull(datascores[datascores$Rice 
 grp.b <- data.scores[datascores$Rice == "N", ][chull(datascores[datascores$Rice == 
                                                                         "N", c("NMDS1", "NMDS2")]), ]
 hull.data <- rbind(grp.a, grp.b) #turn the hulls into a single dataframe
-hull.rice<-c("Y","Y","Y","Y","Y","Y","Y","Y","Y","N","N","N","N","N","N") #add column for groups (these are based on this data only)
+hull.rice<-c("Y","Y","Y","Y","Y","Y","Y","N","N","N","N","N","N","N") #add column for groups (these are based on this data only)
 hull.data<-cbind(hull.data,hull.rice) #attach group names to hull dataframe
 
 morphorice<-ggplot() +
@@ -211,4 +211,4 @@ divOctober<-ggplot(riverdivOctober,aes(x=Enviro,y=Simpsons,fill=Enviro))+
         plot.background = element_blank())
 
 
-plot_grid(divJune,divAugust,divOctober,labels=c("A","B","C"),ncol=3)
+plot_grid(divJune,divAugust,divOctober,ncol=3)

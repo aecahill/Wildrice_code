@@ -64,3 +64,13 @@ g_bank_near_grassmud	October 	7	25	N
 g_bank_near_grassmud	October 	7	2	N
 j_wildricebed_bridge	October 	10	9	Y
 j_wildricebed_bridge	October 	10	6	Y
+i_riverbank_field	August	9	12	N
+b_channel_wildrice	August	2	11	Y
+d_wildricebed_right_dock	August	4	F	Y
+f_bank_near_tallgrass	August	6	9	N
+g_bank_near_grassmud	August	7	5	N
+				
+			
+				
+				
+				
