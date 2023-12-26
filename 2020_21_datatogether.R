@@ -1,9 +1,10 @@
-#need file marsh which is the matrix of species
-#need file marshsites 
-#THIS CODE NOW REQUIRES THE RAREFACTION SCRIPT ALSO!
+#need file river which is the matrix of species
+#need file riversites 
+#need file riverrich
 
 river<-read.table("C:/Users/aecsk/Documents/GitHub/Wildrice_code/river_taxa.txt",header=TRUE)
 riversites<-read.table("C:/Users/aecsk/Documents/GitHub/Wildrice_code/river_sites.txt",header=TRUE)
+riverrich<-read.table("C:/Users/aecsk/Documents/GitHub/Wildrice_code/river_rich.txt",header=TRUE)
 
 #load vegan
 library(vegan)
@@ -158,7 +159,7 @@ colnames(riverdiv)<-c("Simpsons","Enviro","Month","Site","Replicate","Rice") #re
 #summary(aov(marshdiv$Simpsons~marshdiv$Month)) #anova among regions
 #summary(aov(marshdiv$Simpsons~marshdiv$Site)) #anova among regions
 
-summary(aov(riverdiv$Simpsons~riverdiv$Month*riverdiv$Enviro)) #two-way ANOVA
+summary(aov(riverdiv$Simpsons~riverdiv$Rice+riverdiv$Month*riverdiv$Enviro)) #two-way ANOVA
 
 riverdivJune<-riverdiv[riverdiv$Month == "June", ]
 riverdivAugust<-riverdiv[riverdiv$Month == "August", ]
@@ -212,3 +213,61 @@ divOctober<-ggplot(riverdivOctober,aes(x=Enviro,y=Simpsons,fill=Enviro))+
 
 
 plot_grid(divJune,divAugust,divOctober,ncol=3)
+
+
+#richness stats
+
+summary(aov(riverrich$Richness~riverdiv$Rice+riverrich$Month*riverrich$Enviro)) #two-way ANOVA
+
+riverrichJune<-riverrich[riverrich$Month == "June", ]
+riverrichAugust<-riverrich[riverrich$Month == "August", ]
+riverrichOctober<-riverrich[riverrich$Month == "October", ]
+
+
+richJune<-ggplot(riverrichJune,aes(x=Enviro,y=Richness,fill=Enviro))+
+  geom_boxplot()+ 
+  geom_jitter(alpha=0.5)+
+  scale_fill_manual(values=rev(wes_palette("Zissou1", n = 10, type="continuous"))) +
+  ylim(0,3)+
+  theme_bw()+
+  theme(legend.position="none",
+        axis.text.x = element_text(angle = 45,vjust = 0.5, hjust=1),
+        axis.title.x = element_blank(), # remove x-axis labels
+        axis.title.y = element_text(size=16), # remove y-axis labels
+        panel.background = element_blank(), 
+        panel.grid.major = element_blank(),  #remove major-grid labels
+        panel.grid.minor = element_blank(),  #remove minor-grid labels
+        plot.background = element_blank())
+
+richAugust<-ggplot(riverrichAugust,aes(x=Enviro,y=Richness,fill=Enviro))+
+  geom_boxplot()+ 
+  geom_jitter(alpha=0.5)+
+  scale_fill_manual(values=rev(wes_palette("Zissou1", n = 10, type="continuous"))) +
+  ylim(0,3)+
+  theme_bw()+
+  theme(legend.position="none",
+        axis.text.x = element_text(angle = 45,vjust = 0.5, hjust=1),
+        axis.title.x = element_blank(), # remove x-axis labels
+        axis.title.y = element_blank(), # remove y-axis labels
+        panel.background = element_blank(), 
+        panel.grid.major = element_blank(),  #remove major-grid labels
+        panel.grid.minor = element_blank(),  #remove minor-grid labels
+        plot.background = element_blank())
+
+richOctober<-ggplot(riverrichOctober,aes(x=Enviro,y=Richness,fill=Enviro))+
+  geom_boxplot()+ 
+  geom_jitter(alpha=0.5)+
+  scale_fill_manual(values=rev(wes_palette("Zissou1", n = 10, type="continuous"))) +
+  ylim(0,3)+
+  theme_bw()+
+  theme(legend.position="none",
+        axis.text.x = element_text(angle = 45,vjust = 0.5, hjust=1),
+        axis.title.x = element_blank(), # remove x-axis labels
+        axis.title.y = element_blank(), # remove y-axis labels
+        panel.background = element_blank(), 
+        panel.grid.major = element_blank(),  #remove major-grid labels
+        panel.grid.minor = element_blank(),  #remove minor-grid labels
+        plot.background = element_blank())
+
+
+plot_grid(richJune,richAugust,richOctober,ncol=3)

@@ -1,0 +1,79 @@
+Richness 	Enviro	Month	Site	Replicate	Rice
+1.704603162	a_riverbank	June	1	12	N
+2.05174418	a_riverbank	June	1	14	N
+1.857184357	a_riverbank	June	1	6	N
+2.346035321	b_channel_wildrice	June	2	5	Y
+1.396136246	b_channel_wildrice	June	2	13	Y
+2.194562549	b_channel_wildrice	June	2	11	Y
+1.252015078	c_wildricebed_left_dock	June	3	2	Y
+1.389696935	c_wildricebed_left_dock	June 	3	4	Y
+2.048004436	c_wildricebed_left_dock	June 	3	15	Y
+2.79768256	d_wildricebed_right_dock	June 	4	23	Y
+2.275598067	d_wildricebed_right_dock	June 	4	27	Y
+2.126980685	d_wildricebed_right_dock	June 	4	24	Y
+2.136458793	e_bank_near_honeysuckle	June 	5	20	N
+1.921596301	e_bank_near_honeysuckle	June 	5	22	N
+2.382392877	e_bank_near_honeysuckle	June 	5	21	N
+1.140101314	f_bank_near_tallgrass	June 	6	26	N
+1.196719325	f_bank_near_tallgrass	June 	6	28	N
+1.846346865	f_bank_near_tallgrass	June 	6	30	N
+1.062803372	g_bank_near_grassmud	June	7	25	N
+2.020708263	g_bank_near_grassmud	June	7	29	N
+1.262358161	g_bank_near_grassmud	June	7	8	N
+1.886183414	h_upriver_wildricebed	June	8	1	Y
+1.481397101	h_upriver_wildricebed	June	8	10	Y
+1.347960003	h_upriver_wildricebed	June 	8	16	Y
+0.990624725	i_riverbank_field	June	9	9	N
+1.193222213	i_riverbank_field	June 	9	18	N
+1.165911337	i_riverbank_field	June 	9	19	N
+1.029345682	j_wildricebed_bridge	June	10	17	Y
+1.369712519	j_wildricebed_bridge	June 	10	7	Y
+1.214183515	j_wildricebed_bridge	June 	10	3	Y
+2.232480952	j_wildricebed_bridge	August	10	1	Y
+1.756452629	j_wildricebed_bridge	August	10	2	Y
+0.492688108	h_upriver_wildricebed	August	8	3	Y
+0.979250567	i_riverbank_field	August	9	4	N
+1.136769545	g_bank_near_grassmud	August	7	6	N
+0.655779133	i_riverbank_field	August	9	7	N
+1.377376677	h_upriver_wildricebed	August	8	8	Y
+0.970546359	f_bank_near_tallgrass	August	6	10	N
+1.484871022	c_wildricebed_left_dock	August	3	13	Y
+1.259353244	g_bank_near_grassmud	August	7	14	N
+1.669041003	c_wildricebed_left_dock	August	3	15	Y
+1.534638382	f_bank_near_tallgrass	August	6	16	N
+0.857736087	i_riverbank_field	August	9	17	N
+1.32128685	g_bank_near_grassmud	August	7	18	N
+1.211494353	d_wildricebed_right_dock	August	4	19	Y
+0.415611675	a_riverbank	August	1	20	N
+0.736737035	a_riverbank	August	1	C	N
+2.037739631	e_bank_near_honeysuckle	August	5	D	N
+1.183687787	d_wildricebed_right_dock	August	4	E	Y
+1.207288813	e_bank_near_honeysuckle	August	5	G	N
+0.183164088	a_riverbank	October 	1	17	N
+1.331432461	a_riverbank	October 	1	15	N
+0.912819646	b_channel_wildrice	October 	2	13	Y
+1.057666557	b_channel_wildrice	October 	2	16	Y
+2.32860877	d_wildricebed_right_dock	October 	4	22	Y
+1.837544789	d_wildricebed_right_dock	October 	4	24	Y
+1.773497931	d_wildricebed_right_dock	October 	4	7	Y
+1.182225519	e_bank_near_honeysuckle	October 	5	5	N
+1.638430608	e_bank_near_honeysuckle	October 	5	10	N
+1.764752102	e_bank_near_honeysuckle	October 	5	23	N
+0.853543369	f_bank_near_tallgrass	October 	6	4	N
+1.336350812	g_bank_near_grassmud	October 	7	25	N
+1.789686094	g_bank_near_grassmud	October 	7	2	N
+1.190934785	j_wildricebed_bridge	October 	10	9	Y
+1.891942388	j_wildricebed_bridge	October 	10	6	Y
+0.877640504	i_riverbank_field	August	9	12	N
+0.513898342	b_channel_wildrice	August	2	11	Y
+0.670041171	d_wildricebed_right_dock	August	4	F	Y
+1.313834955	f_bank_near_tallgrass	August	6	9	N
+0.172172085	g_bank_near_grassmud	August	7	5	N
+					
+					
+					
+					
+					
+					
+					
+					
