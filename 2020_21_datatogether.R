@@ -28,7 +28,7 @@ anosim(river,riversites$Enviro)
 anosim(river,riversites$Rice)
 
 #compute PERMANOVA with a space and time interaction
-adonis(formula=river~riversites$Month*riversites$Rice)
+adonis2(formula=river~riversites$Enviro*riversites$Month*riversites$Rice)
 
 
 
