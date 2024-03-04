@@ -6,6 +6,9 @@ river<-read.table("C:/Users/aecsk/Documents/GitHub/Wildrice_code/river_taxa.txt"
 riversites<-read.table("C:/Users/aecsk/Documents/GitHub/Wildrice_code/river_sites.txt",header=TRUE)
 riverrich<-read.table("C:/Users/aecsk/Documents/GitHub/Wildrice_code/river_rich.txt",header=TRUE)
 
+#NOTE MARCH 4 2024: SITE AND RICE ARE COLLINEAR! which, obviously, bc site is either rice or no rice, always
+#So let's not consider site. It's not important. What we want is rice and no rice. 
+
 #load vegan
 library(vegan)
 library(wesanderson)
@@ -24,11 +27,11 @@ rivernmds<-metaMDS(river)
 
 #analysis of similarity for sites and regions
 anosim(river,riversites$Month)
-anosim(river,riversites$Enviro)
+#anosim(river,riversites$Enviro)
 anosim(river,riversites$Rice)
 
 #compute PERMANOVA with a space and time interaction
-adonis2(formula=river~riversites$Enviro*riversites$Month*riversites$Rice)
+adonis2(formula=river~riversites$Month*riversites$Rice+riversites$Enviro)
 
 
 
@@ -75,51 +78,6 @@ morphotime<-ggplot() +
         plot.background = element_blank())+ 
   geom_polygon(data=hull.data,aes(x=NMDS1,y=NMDS2,group=hull.month),alpha=0.15) #add polygon based on the hulls calculated
 
-#ACROSS SITES
-
-grp.a <- data.scores[datascores$Enviro == "a_riverbank", ][chull(datascores[datascores$Enviro == 
-                                                                  "a_riverbank", c("NMDS1", "NMDS2")]), ]
-grp.b <- data.scores[datascores$Enviro == "b_channel_wildrice", ][chull(datascores[datascores$Enviro == 
-                                                                  "b_channel_wildrice", c("NMDS1", "NMDS2")]), ]
-grp.c <- data.scores[datascores$Enviro == "c_wildricebed_left_dock", ][chull(datascores[datascores$Enviro == 
-                                                                  "c_wildricebed_left_dock", c("NMDS1", "NMDS2")]), ]
-grp.d <- data.scores[datascores$Enviro == "d_wildricebed_right_dock", ][chull(datascores[datascores$Enviro == 
-                                                                  "d_wildricebed_right_dock", c("NMDS1", "NMDS2")]), ]
-grp.e <- data.scores[datascores$Enviro == "e_bank_near_honeysuckle", ][chull(datascores[datascores$Enviro == 
-                                                                  "e_bank_near_honeysuckle", c("NMDS1", "NMDS2")]), ]
-grp.f <- data.scores[datascores$Enviro == "f_bank_near_tallgrass", ][chull(datascores[datascores$Enviro == 
-                                                                  "f_bank_near_tallgrass", c("NMDS1", "NMDS2")]), ]
-grp.g <- data.scores[datascores$Enviro == "g_bank_near_grassmud", ][chull(datascores[datascores$Enviro == 
-                                                                  "g_bank_near_grassmud", c("NMDS1", "NMDS2")]), ]
-grp.h <- data.scores[datascores$Enviro == "h_upriver_wildricebed", ][chull(datascores[datascores$Enviro == 
-                                                                                       "h_upriver_wildricebed", c("NMDS1", "NMDS2")]), ]
-grp.i <- data.scores[datascores$Enviro == "i_riverbank_field", ][chull(datascores[datascores$Enviro == 
-                                                                                       "i_riverbank_field", c("NMDS1", "NMDS2")]), ]
-grp.j <- data.scores[datascores$Enviro == "j_wildricebed_bridge", ][chull(datascores[datascores$Enviro == 
-                                                                                       "j_wildricebed_bridge", c("NMDS1", "NMDS2")]), ]
-
-hull.data <- rbind(grp.a, grp.b, grp.c, grp.d,grp.e, grp.f, grp.g, grp.h,grp.i,grp.j) #turn the hulls into a single dataframe
-hull.sample<-c("A","A","A","A","A","B","B","B","B","B","C","C","C","C","D","D","D","D","D","E","E","E","E","E","E","F","F","F","F","G","G","G","G","G","H","H","H","H","I","I","I","I","I","I","J","J","J","J") #add column for groups (these are based on this data only)
-hull.data<-cbind(hull.data,hull.sample) #attach group names to hull dataframe
-
-#plot in ggplot
-
-morphosite<-ggplot() +
-  geom_point(data=datascores,aes(x=NMDS1,y=NMDS2,colour=Enviro),size=3) + # add the point markers
-  scale_colour_manual(values=rev(wes_palette("Zissou1", n = 10, type="continuous"))) +
-  coord_equal() +
-  theme_bw()+
-  theme(axis.text.x = element_blank(),  # remove x-axis text
-        axis.text.y = element_blank(), # remove y-axis text
-        axis.ticks = element_blank(),  # remove axis ticks
-        axis.title.x = element_text(size=16), # remove x-axis labels
-        axis.title.y = element_text(size=16), # remove y-axis labels
-        panel.background = element_blank(), 
-        panel.grid.major = element_blank(),  #remove major-grid labels
-        panel.grid.minor = element_blank(),  #remove minor-grid labels
-        plot.background = element_blank())+ 
-  geom_polygon(data=hull.data,aes(x=NMDS1,y=NMDS2,group=hull.sample),alpha=0.10) #add polygon based on the hulls calculated
-
 
 #By rice
 grp.a <- data.scores[datascores$Rice == "Y", ][chull(datascores[datascores$Rice == 
@@ -146,7 +104,8 @@ morphorice<-ggplot() +
         plot.background = element_blank())+ 
   geom_polygon(data=hull.data,aes(x=NMDS1,y=NMDS2,group=hull.rice),alpha=0.10) #add polygon based on the hulls calculated
 
-plot_grid(morphosite,morphotime,morphorice,labels=c("A","B","C"),ncol=1)
+plot_grid(morphotime,morphorice,labels=c("A","B"),ncol=1)
+
 
 
 #diversity statistics
@@ -155,83 +114,43 @@ riverdiv<-cbind(diversity(river,index="simpson"),riversites) #calculate simpsons
 
 colnames(riverdiv)<-c("Simpsons","Enviro","Month","Site","Replicate","Rice") #rename columns
 
-
-#summary(aov(marshdiv$Simpsons~marshdiv$Month)) #anova among regions
-#summary(aov(marshdiv$Simpsons~marshdiv$Site)) #anova among regions
-
-summary(aov(riverdiv$Simpsons~riverdiv$Rice+riverdiv$Month*riverdiv$Enviro)) #two-way ANOVA
-
-riverdivJune<-riverdiv[riverdiv$Month == "June", ]
-riverdivAugust<-riverdiv[riverdiv$Month == "August", ]
-riverdivOctober<-riverdiv[riverdiv$Month == "October", ]
+summary(aov(riverdiv$Simpsons~riverdiv$Rice*riverdiv$Month+riverdiv$Enviro)) #two-way ANOVA
 
 
-divJune<-ggplot(riverdivJune,aes(x=Enviro,y=Simpsons,fill=Enviro))+
+
+diversityfig<-ggplot(riverdiv,aes(x=Month,y=Simpsons,fill=Rice))+
   geom_boxplot()+ 
-  geom_jitter(alpha=0.5)+
-  scale_fill_manual(values=rev(wes_palette("Zissou1", n = 10, type="continuous"))) +
+  geom_point(alpha=0.6, position=position_jitterdodge(0.2))+
+  scale_fill_manual(values=rev(wes_palette("Zissou1", n = 2, type="continuous"))) +
+  scale_color_manual(values=rev(wes_palette("Zissou1", n = 2, type="continuous"))) +
   ylim(0,1)+
   theme_bw()+
-  theme(legend.position="none",
-        axis.text.x = element_text(angle = 45,vjust = 0.5, hjust=1),
+  theme(axis.text.x = element_text(angle = 45,vjust = 0.5, hjust=1),
     axis.title.x = element_blank(), # remove x-axis labels
         axis.title.y = element_text(size=16), # remove y-axis labels
         panel.background = element_blank(), 
         panel.grid.major = element_blank(),  #remove major-grid labels
         panel.grid.minor = element_blank(),  #remove minor-grid labels
         plot.background = element_blank())
-
-divAugust<-ggplot(riverdivAugust,aes(x=Enviro,y=Simpsons,fill=Enviro))+
-  geom_boxplot()+ 
-  geom_jitter(alpha=0.5)+
-  scale_fill_manual(values=rev(wes_palette("Zissou1", n = 10, type="continuous"))) +
-  ylim(0,1)+
-  theme_bw()+
-  theme(legend.position="none",
-        axis.text.x = element_text(angle = 45,vjust = 0.5, hjust=1),
-    axis.title.x = element_blank(), # remove x-axis labels
-        axis.title.y = element_blank(), # remove y-axis labels
-        panel.background = element_blank(), 
-        panel.grid.major = element_blank(),  #remove major-grid labels
-        panel.grid.minor = element_blank(),  #remove minor-grid labels
-        plot.background = element_blank())
-
-divOctober<-ggplot(riverdivOctober,aes(x=Enviro,y=Simpsons,fill=Enviro))+
-  geom_boxplot()+ 
-  geom_jitter(alpha=0.5)+
-  scale_fill_manual(values=rev(wes_palette("Zissou1", n = 10, type="continuous"))) +
-  ylim(0,1)+
-  theme_bw()+
-  theme(legend.position="none",
-        axis.text.x = element_text(angle = 45,vjust = 0.5, hjust=1),
-    axis.title.x = element_blank(), # remove x-axis labels
-        axis.title.y = element_blank(), # remove y-axis labels
-        panel.background = element_blank(), 
-        panel.grid.major = element_blank(),  #remove major-grid labels
-        panel.grid.minor = element_blank(),  #remove minor-grid labels
-        plot.background = element_blank())
-
-
-plot_grid(divJune,divAugust,divOctober,ncol=3)
 
 
 #richness stats
 
-summary(aov(riverrich$Richness~riverdiv$Rice+riverrich$Month*riverrich$Enviro)) #two-way ANOVA
+summary(aov(riverrich$Richness~riverrich$Rice*riverrich$Month+riverrich$Enviro)) #two-way ANOVA
 
-riverrichJune<-riverrich[riverrich$Month == "June", ]
-riverrichAugust<-riverrich[riverrich$Month == "August", ]
-riverrichOctober<-riverrich[riverrich$Month == "October", ]
+#ricerich.lm <- lm(formula = Richness ~ Rice*Month,
+                 #data = riverrich)
 
+#car::Anova(ricerich.lm, type = 3)
 
-richJune<-ggplot(riverrichJune,aes(x=Enviro,y=Richness,fill=Enviro))+
+richnessfig<-ggplot(riverrich,aes(x=Month,y=Richness,fill=Rice))+
   geom_boxplot()+ 
-  geom_jitter(alpha=0.5)+
-  scale_fill_manual(values=rev(wes_palette("Zissou1", n = 10, type="continuous"))) +
+  geom_point(alpha=0.6, position=position_jitterdodge(0.2))+
+  scale_fill_manual(values=rev(wes_palette("Zissou1", n = 2, type="continuous"))) +
+  scale_color_manual(values=rev(wes_palette("Zissou1", n = 2, type="continuous"))) +
   ylim(0,3)+
   theme_bw()+
-  theme(legend.position="none",
-        axis.text.x = element_text(angle = 45,vjust = 0.5, hjust=1),
+  theme(axis.text.x = element_text(angle = 45,vjust = 0.5, hjust=1),
         axis.title.x = element_blank(), # remove x-axis labels
         axis.title.y = element_text(size=16), # remove y-axis labels
         panel.background = element_blank(), 
@@ -239,35 +158,4 @@ richJune<-ggplot(riverrichJune,aes(x=Enviro,y=Richness,fill=Enviro))+
         panel.grid.minor = element_blank(),  #remove minor-grid labels
         plot.background = element_blank())
 
-richAugust<-ggplot(riverrichAugust,aes(x=Enviro,y=Richness,fill=Enviro))+
-  geom_boxplot()+ 
-  geom_jitter(alpha=0.5)+
-  scale_fill_manual(values=rev(wes_palette("Zissou1", n = 10, type="continuous"))) +
-  ylim(0,3)+
-  theme_bw()+
-  theme(legend.position="none",
-        axis.text.x = element_text(angle = 45,vjust = 0.5, hjust=1),
-        axis.title.x = element_blank(), # remove x-axis labels
-        axis.title.y = element_blank(), # remove y-axis labels
-        panel.background = element_blank(), 
-        panel.grid.major = element_blank(),  #remove major-grid labels
-        panel.grid.minor = element_blank(),  #remove minor-grid labels
-        plot.background = element_blank())
-
-richOctober<-ggplot(riverrichOctober,aes(x=Enviro,y=Richness,fill=Enviro))+
-  geom_boxplot()+ 
-  geom_jitter(alpha=0.5)+
-  scale_fill_manual(values=rev(wes_palette("Zissou1", n = 10, type="continuous"))) +
-  ylim(0,3)+
-  theme_bw()+
-  theme(legend.position="none",
-        axis.text.x = element_text(angle = 45,vjust = 0.5, hjust=1),
-        axis.title.x = element_blank(), # remove x-axis labels
-        axis.title.y = element_blank(), # remove y-axis labels
-        panel.background = element_blank(), 
-        panel.grid.major = element_blank(),  #remove major-grid labels
-        panel.grid.minor = element_blank(),  #remove minor-grid labels
-        plot.background = element_blank())
-
-
-plot_grid(richJune,richAugust,richOctober,ncol=3)
+plot_grid(richnessfig,diversityfig,labels=c("A","B"),ncol=1)
