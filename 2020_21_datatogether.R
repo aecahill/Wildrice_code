@@ -20,10 +20,10 @@ library(ggplot2)
 rivernmds<-metaMDS(river)
 
 #plot NMDS in base R
-#ordiplot(asus3nmds,type="n")
-#ordiellipse(asus3nmds,groups=sites$Sea,draw="polygon",col="grey90",label=F)
-#orditorp(asus3nmds,display="species",col="black",air=0.01)
-#orditorp(asus3nmds,display="sites",col="red",air=0.01)
+ordiplot(rivernmds,type="n")
+ordiellipse(rivernmds,groups=riversites$Rice,draw="polygon",col="grey90",label=F)
+orditorp(rivernmds,display="species",col="black",air=0.01)
+orditorp(rivernmds,display="sites",col="red",air=0.01)
 
 #analysis of similarity for sites and regions
 anosim(river,riversites$Month)
@@ -31,8 +31,8 @@ anosim(river,riversites$Month)
 anosim(river,riversites$Rice)
 
 #compute PERMANOVA with a space and time interaction
-adonis2(formula=river~riversites$Month*riversites$Rice+riversites$Enviro)
-
+adonis2(formula=river~riversites$Rice*riversites$Month+riversites$Enviro)
+#Changed that code March 5 2024 so that the model order matches the richness/diversity ones
 
 
 #moving plot to ggplot
