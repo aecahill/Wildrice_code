@@ -159,3 +159,177 @@ richnessfig<-ggplot(riverrich,aes(x=Month,y=Richness,fill=Rice))+
         plot.background = element_blank())
 
 plot_grid(richnessfig,diversityfig,labels=c("A","B"),ncol=1)
+
+
+#Composition plot tries, March 6 start, from ASUS code
+#make collapsed list of taxa across months
+ricecomp<-cbind(river,riversites)
+
+sites<-c(1:ncol(river))
+b = NULL
+
+for (i in sites) {
+  collapsed<-tapply(ricecomp[,i],ricecomp$Enviro,sum)
+  b<-cbind(b,collapsed)
+  
+}
+
+b
+colnames(b)<-colnames(ricecomp[1:38])
+
+#Find taxa that represent at least 0.5% in the dataset
+
+tots<-colSums(b)
+grandtot<-sum(tots)
+percs<-100*(tots/grandtot)
+
+#Remove all taxa that do not represent 0.5% in the dataset
+
+filtered = NULL
+taxanames<-colnames(b)
+morphonamesvec = NULL
+
+taxa<-c(1:38)
+
+for (i in taxa) {
+  if (percs[i]>= 0.5) {
+    filtered<-cbind(filtered,b[,i])
+    morphonamesvec<-c(morphonamesvec,taxanames[i])
+  }
+}
+
+colnames(filtered)<-morphonamesvec
+sitenames<-rownames(filtered)
+filtered<-as.data.frame(cbind(filtered,sitenames))
+
+morphofiltered<-pivot_longer(filtered, cols=1:(ncol(filtered)-1), 
+             values_to = "value", values_drop_na = FALSE)
+
+
+compositionplotSite <-ggplot(morphofiltered, aes(x=sitenames, y=as.numeric(value), fill=name)) +
+  geom_bar(stat="identity") + 
+  theme_bw()+
+  theme(panel.grid.minor=element_blank(), panel.grid.major=element_blank())+
+  xlab("Site")+
+  theme(axis.title.x = element_text(size=12))+
+  theme(axis.title.y=element_text(size=12))+
+  scale_fill_brewer( type = "div" , palette = "Set3" ) +
+  theme_bw() + ylab("Abundance\n") + 
+  theme(legend.position="none")+
+  theme(axis.text.x= element_text(angle = 90))
+
+#OK, let's try it again for the months, that is, collapsing across sites
+ricecomp<-cbind(river,riversites)
+
+taxanames<-c(1:ncol(river))
+b = NULL
+
+for (i in taxanames) {
+  collapsed<-tapply(ricecomp[,i],ricecomp$Month,sum)
+  b<-cbind(b,collapsed)
+  
+}
+
+b
+colnames(b)<-colnames(ricecomp[1:ncol(river)])
+
+#Find taxa that represent at least 0.5% in the dataset
+
+tots<-colSums(b)
+grandtot<-sum(tots)
+percs<-100*(tots/grandtot)
+
+#Remove all taxa that do not represent 0.5% in the dataset
+
+filtered = NULL
+taxanames<-colnames(b)
+morphonamesvec = NULL
+
+taxa<-c(1:ncol(river))
+
+for (i in taxa) {
+  if (percs[i]>= 0.5) {
+    filtered<-cbind(filtered,b[,i])
+    morphonamesvec<-c(morphonamesvec,taxanames[i])
+  }
+}
+
+colnames(filtered)<-morphonamesvec
+monthnames<-rownames(filtered)
+filtered<-as.data.frame(cbind(filtered,monthnames))
+
+morphofiltered<-pivot_longer(filtered, cols=1:(ncol(filtered)-1), 
+                             values_to = "value", values_drop_na = FALSE)
+
+
+compositionplotMonth <-ggplot(morphofiltered, aes(x=monthnames, y=as.numeric(value), fill=name)) +
+  geom_bar(stat="identity") + 
+  theme_bw()+
+  theme(panel.grid.minor=element_blank(), panel.grid.major=element_blank())+
+  xlab("Month")+
+  theme(axis.title.x = element_text(size=12))+
+  theme(axis.title.y=element_text(size=12))+
+  scale_fill_brewer( type = "div" , palette = "Set3" ) +
+  theme_bw() + ylab("Abundance\n") + 
+  theme(legend.position="none")+
+  theme(axis.text.x= element_text(angle = 90))
+
+
+#Now let's try with and without rice
+ricecomp<-cbind(river,riversites)
+
+taxanames<-c(1:ncol(river))
+b = NULL
+
+for (i in taxanames) {
+  collapsed<-tapply(ricecomp[,i],ricecomp$Rice,sum)
+  b<-cbind(b,collapsed)
+  
+}
+
+b
+colnames(b)<-colnames(ricecomp[1:ncol(river)])
+
+#Find taxa that represent at least 0.5% in the dataset
+
+tots<-colSums(b)
+grandtot<-sum(tots)
+percs<-100*(tots/grandtot)
+
+#Remove all taxa that do not represent 0.5% in the dataset
+
+filtered = NULL
+taxanames<-colnames(b)
+morphonamesvec = NULL
+
+taxa<-c(1:ncol(river))
+
+for (i in taxa) {
+  if (percs[i]>= 0.5) {
+    filtered<-cbind(filtered,b[,i])
+    morphonamesvec<-c(morphonamesvec,taxanames[i])
+  }
+}
+
+colnames(filtered)<-morphonamesvec
+ricenames<-rownames(filtered)
+filtered<-as.data.frame(cbind(filtered,ricenames))
+
+morphofiltered<-pivot_longer(filtered, cols=1:(ncol(filtered)-1), 
+                             values_to = "value", values_drop_na = FALSE)
+
+
+compositionplotRice <-ggplot(morphofiltered, aes(x=ricenames, y=as.numeric(value), fill=name)) +
+  geom_bar(stat="identity") + 
+  theme_bw()+
+  theme(panel.grid.minor=element_blank(), panel.grid.major=element_blank())+
+  xlab("Rice")+
+  theme(axis.title.x = element_text(size=12))+
+  theme(axis.title.y=element_text(size=12))+
+  scale_fill_brewer( type = "div" , palette = "Set3" ) +
+  theme_bw() + ylab("Abundance\n") + 
+  theme(axis.text.x= element_text(angle = 90))
+
+
+
+plot_grid(compositionplotSite,compositionplotMonth,compositionplotRice,labels=c("A","B","C"),ncol=3)
