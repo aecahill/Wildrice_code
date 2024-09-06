@@ -333,3 +333,28 @@ compositionplotRice <-ggplot(morphofiltered, aes(x=ricenames, y=as.numeric(value
 
 
 plot_grid(compositionplotSite,compositionplotMonth,compositionplotRice,labels=c("A","B","C"),ncol=3)
+
+
+# September 6 2024
+# Let's do the analyses without amphipods
+
+#First, remove amphipods from dataset
+river_no_amphi<-cbind(river[,1:16], river[,18:38])
+
+#diversity statistics
+
+riverdiv_no_amphi<-cbind(diversity(river_no_amphi,index="simpson"),riversites) #calculate simpsons index, bind to site information
+
+colnames(riverdiv_no_amphi)<-c("Simpsons","Enviro","Month","Site","Replicate","Rice") #rename columns
+
+summary(aov(riverdiv_no_amphi$Simpsons~riverdiv_no_amphi$Rice*riverdiv_no_amphi$Month)) #two-way ANOVA
+
+
+#Permanova
+adonis2(formula=river_no_amphi~riversites$Rice*riversites$Month+riversites$Enviro)
+
+# Richness
+rich_noamphi<-read.table("rich_no_amphi.txt",header=TRUE)
+rich_noamphi<-cbind(riverrich,rich_noamphi)
+
+summary(aov(rich_noamphi$R~rich_noamphi$Rice*rich_noamphi$Month+rich_noamphi$Enviro)) #two-way ANOVA
