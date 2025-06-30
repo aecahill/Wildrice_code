@@ -15,6 +15,7 @@ library(wesanderson)
 
 library(cowplot)
 library(ggplot2)
+library(tidyr)
 
 #compute NMDS
 rivernmds<-metaMDS(river)
@@ -125,7 +126,7 @@ diversityfig<-ggplot(riverdiv,aes(x=Month,y=Simpsons,fill=Rice))+
   scale_color_manual(values=rev(wes_palette("Zissou1", n = 2, type="continuous"))) +
   ylim(0,1)+
   theme_bw()+
-  theme(axis.text.x = element_text(angle = 45,vjust = 0.5, hjust=1),
+  theme(axis.text.x = element_text(vjust = 0.5, hjust=1),
     axis.title.x = element_blank(), # remove x-axis labels
         axis.title.y = element_text(size=16), # remove y-axis labels
         panel.background = element_blank(), 
@@ -150,7 +151,7 @@ richnessfig<-ggplot(riverrich,aes(x=Month,y=Richness,fill=Rice))+
   scale_color_manual(values=rev(wes_palette("Zissou1", n = 2, type="continuous"))) +
   ylim(0,3)+
   theme_bw()+
-  theme(axis.text.x = element_text(angle = 45,vjust = 0.5, hjust=1),
+  theme(axis.text.x = element_text(vjust = 0.5, hjust=1),
         axis.title.x = element_blank(), # remove x-axis labels
         axis.title.y = element_text(size=16), # remove y-axis labels
         panel.background = element_blank(), 
@@ -202,7 +203,9 @@ colnames(filtered)<-morphonamesvec
 sitenames<-rownames(filtered)
 filtered<-as.data.frame(cbind(filtered,sitenames))
 
-morphofiltered<-pivot_longer(filtered, cols=1:(ncol(filtered)-1), 
+filtered_scale<-read.table("scalebysite.txt",header=T) #read in file created June 29 to scale to smallest counts
+
+morphofiltered<-pivot_longer(filtered_scale, cols=1:(ncol(filtered)-1), 
              values_to = "value", values_drop_na = FALSE)
 
 
@@ -258,7 +261,9 @@ colnames(filtered)<-morphonamesvec
 monthnames<-rownames(filtered)
 filtered<-as.data.frame(cbind(filtered,monthnames))
 
-morphofiltered<-pivot_longer(filtered, cols=1:(ncol(filtered)-1), 
+filtered_month<-read.table("scalebymonth.txt",header=TRUE) #scaling to correct for sample size
+
+morphofiltered<-pivot_longer(filtered_month, cols=1:(ncol(filtered)-1), 
                              values_to = "value", values_drop_na = FALSE)
 
 
@@ -314,6 +319,8 @@ for (i in taxa) {
 colnames(filtered)<-morphonamesvec
 ricenames<-rownames(filtered)
 filtered<-as.data.frame(cbind(filtered,ricenames))
+
+filtered_rice<-read.table("scalebyrice.txt",header=TRUE)
 
 morphofiltered<-pivot_longer(filtered, cols=1:(ncol(filtered)-1), 
                              values_to = "value", values_drop_na = FALSE)

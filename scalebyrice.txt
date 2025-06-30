@@ -1,0 +1,3 @@
+pouch_snail	gilled_snail	orb_snail	pill_fingernail_clam	water_snipe_fly_larva	flatworm	midge_larva	crayfish	amphipod	isopod_aquSowbug	mayfly_larva	annelids	ricenames
+57.26314	74.10524	57.26314	124.63154	12.631575	21.89473	248.420975	49.684195	5696.840325	54.736825	45.47367	0.842105	N
+55	118	72	317	65	153	272	50	4895	19	32	87	Y
