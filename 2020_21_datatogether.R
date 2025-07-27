@@ -2,9 +2,9 @@
 #need file riversites 
 #need file riverrich
 
-river<-read.table("C:/Users/aecsk/Documents/GitHub/Wildrice_code/river_taxa.txt",header=TRUE)
-riversites<-read.table("C:/Users/aecsk/Documents/GitHub/Wildrice_code/river_sites.txt",header=TRUE)
-riverrich<-read.table("C:/Users/aecsk/Documents/GitHub/Wildrice_code/river_rich.txt",header=TRUE)
+river<-read.table("C:/Users/aecsk/OneDrive/Documents/GitHub/Wildrice_code/river_taxa.txt",header=TRUE)
+riversites<-read.table("C:/Users/aecsk/OneDrive/Documents/GitHub/Wildrice_code/river_sites.txt",header=TRUE)
+riverrich<-read.table("C:/Users/aecsk/OneDrive/Documents/GitHub/Wildrice_code/river_rich.txt",header=TRUE)
 
 #NOTE MARCH 4 2024: SITE AND RICE ARE COLLINEAR! which, obviously, bc site is either rice or no rice, always
 #So let's not consider site. It's not important. What we want is rice and no rice. 
@@ -29,10 +29,10 @@ orditorp(rivernmds,display="sites",col="red",air=0.01)
 #analysis of similarity for sites and regions
 anosim(river,riversites$Month)
 #anosim(river,riversites$Enviro)
-anosim(river,riversites$Rice)
+anosim(river,riversites$Mnomen)
 
 #compute PERMANOVA with a space and time interaction
-adonis2(formula=river~riversites$Rice*riversites$Month+riversites$Enviro)
+adonis2(formula=river~riversites$Mnomen*riversites$Month+riversites$Enviro)
 #Changed that code March 5 2024 so that the model order matches the richness/diversity ones
 
 
@@ -49,14 +49,14 @@ head(species.scores)
 
 #make hulls, one for each sea
 
-grp.a <- data.scores[datascores$Month == "June", ][chull(datascores[datascores$Month == 
-                                                                       "June", c("NMDS1", "NMDS2")]), ]
-grp.b <- data.scores[datascores$Month == "August", ][chull(datascores[datascores$Month == 
-                                                                      "August", c("NMDS1", "NMDS2")]), ]
-grp.c <- data.scores[datascores$Month == "October", ][chull(datascores[datascores$Month == 
-                                                                         "October", c("NMDS1", "NMDS2")]), ]
+grp.a <- data.scores[datascores$Month == "A_June", ][chull(datascores[datascores$Month == 
+                                                                       "A_June", c("NMDS1", "NMDS2")]), ]
+grp.b <- data.scores[datascores$Month == "B_August", ][chull(datascores[datascores$Month == 
+                                                                      "B_August", c("NMDS1", "NMDS2")]), ]
+grp.c <- data.scores[datascores$Month == "C_October", ][chull(datascores[datascores$Month == 
+                                                                         "C_October", c("NMDS1", "NMDS2")]), ]
 hull.data <- rbind(grp.a, grp.b,grp.c) #turn the hulls into a single dataframe
-hull.month<-c("June","June","June","June","June","June","June","August","August","August","August","August","August","October","October","October","October","October","October","October","October") #add column for groups (these are based on this data only)
+hull.month<-c("A_June","A_June","A_June","A_June","A_June","A_June","A_June","August","August","August","August","August","August","October","October","October","October","October","October","October","October") #add column for groups (these are based on this data only)
 hull.data<-cbind(hull.data,hull.month) #attach group names to hull dataframe
 
 #plot in ggplot
@@ -81,16 +81,16 @@ morphotime<-ggplot() +
 
 
 #By rice
-grp.a <- data.scores[datascores$Rice == "Y", ][chull(datascores[datascores$Rice == 
+grp.a <- data.scores[datascores$Mnomen == "Y", ][chull(datascores[datascores$Mnomen == 
                                                                       "Y", c("NMDS1", "NMDS2")]), ]
-grp.b <- data.scores[datascores$Rice == "N", ][chull(datascores[datascores$Rice == 
+grp.b <- data.scores[datascores$Mnomen == "N", ][chull(datascores[datascores$Mnomen == 
                                                                         "N", c("NMDS1", "NMDS2")]), ]
 hull.data <- rbind(grp.a, grp.b) #turn the hulls into a single dataframe
 hull.rice<-c("Y","Y","Y","Y","Y","Y","Y","N","N","N","N","N","N","N") #add column for groups (these are based on this data only)
 hull.data<-cbind(hull.data,hull.rice) #attach group names to hull dataframe
 
 morphorice<-ggplot() +
-  geom_point(data=datascores,aes(x=NMDS1,y=NMDS2,colour=Rice),size=3) + # add the point markers
+  geom_point(data=datascores,aes(x=NMDS1,y=NMDS2,colour=Mnomen),size=3) + # add the point markers
   scale_colour_manual(values=rev(wes_palette("Zissou1", n = 2, type="continuous"))) +
   coord_equal() +
   theme_bw()+
@@ -113,13 +113,13 @@ plot_grid(morphotime,morphorice,labels=c("A","B"),ncol=1)
 
 riverdiv<-cbind(diversity(river,index="simpson"),riversites) #calculate simpsons index, bind to site information
 
-colnames(riverdiv)<-c("Simpsons","Enviro","Month","Site","Replicate","Rice") #rename columns
+colnames(riverdiv)<-c("Diversity","Enviro","Month","Site","Replicate","Mnomen") #rename columns
 
-summary(aov(riverdiv$Simpsons~riverdiv$Rice*riverdiv$Month+riverdiv$Enviro)) #two-way ANOVA
+summary(aov(riverdiv$Diversity~riverdiv$Mnomen*riverdiv$Month+riverdiv$Enviro)) #two-way ANOVA
 
 
 
-diversityfig<-ggplot(riverdiv,aes(x=Month,y=Simpsons,fill=Rice))+
+diversityfig<-ggplot(riverdiv,aes(x=Month,y=Diversity,fill=Mnomen))+
   geom_boxplot()+ 
   geom_point(alpha=0.6, position=position_jitterdodge(0.2))+
   scale_fill_manual(values=rev(wes_palette("Zissou1", n = 2, type="continuous"))) +
@@ -137,14 +137,14 @@ diversityfig<-ggplot(riverdiv,aes(x=Month,y=Simpsons,fill=Rice))+
 
 #richness stats
 
-summary(aov(riverrich$Richness~riverrich$Rice*riverrich$Month+riverrich$Enviro)) #two-way ANOVA
+summary(aov(riverrich$Richness~riverrich$Mnomen*riverrich$Month+riverrich$Enviro)) #two-way ANOVA
 
 #ricerich.lm <- lm(formula = Richness ~ Rice*Month,
                  #data = riverrich)
 
 #car::Anova(ricerich.lm, type = 3)
 
-richnessfig<-ggplot(riverrich,aes(x=Month,y=Richness,fill=Rice))+
+richnessfig<-ggplot(riverrich,aes(x=Month,y=Richness,fill=Mnomen))+
   geom_boxplot()+ 
   geom_point(alpha=0.6, position=position_jitterdodge(0.2))+
   scale_fill_manual(values=rev(wes_palette("Zissou1", n = 2, type="continuous"))) +
@@ -287,7 +287,7 @@ taxanames<-c(1:ncol(river))
 b = NULL
 
 for (i in taxanames) {
-  collapsed<-tapply(ricecomp[,i],ricecomp$Rice,sum)
+  collapsed<-tapply(ricecomp[,i],ricecomp$Mnomen,sum)
   b<-cbind(b,collapsed)
   
 }
@@ -330,7 +330,7 @@ compositionplotRice <-ggplot(morphofiltered, aes(x=ricenames, y=as.numeric(value
   geom_bar(stat="identity") + 
   theme_bw()+
   theme(panel.grid.minor=element_blank(), panel.grid.major=element_blank())+
-  xlab("Rice")+
+  xlab("Mnomen")+
   theme(axis.title.x = element_text(size=12))+
   theme(axis.title.y=element_text(size=12))+
   scale_fill_brewer( type = "div" , palette = "Set3" ) +

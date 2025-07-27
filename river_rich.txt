@@ -1,4 +1,4 @@
-Richness 	Enviro	Month	Site	Replicate	Rice
+Richness 	Enviro	Month	Site	Replicate	Mnomen
 1.704603162	a_riverbank	A_June	1	12	N
 2.05174418	a_riverbank	A_June	1	14	N
 1.857184357	a_riverbank	A_June	1	6	N

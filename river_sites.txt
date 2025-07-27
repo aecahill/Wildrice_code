@@ -1,4 +1,4 @@
-Enviro	Month	Site	Replicate	Rice
+Enviro	Month	Site	Replicate	Mnomen
 a_riverbank	A_June	1	12	N
 a_riverbank	A_June	1	14	N
 a_riverbank	A_June	1	6	N
