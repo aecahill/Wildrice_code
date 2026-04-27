@@ -358,10 +358,35 @@ summary(aov(riverdiv_no_amphi$Simpsons~riverdiv_no_amphi$Rice*riverdiv_no_amphi$
 
 
 #Permanova
-adonis2(formula=river_no_amphi~riversites$Rice*riversites$Month+riversites$Enviro)
+adonis2(formula=river_no_amphi~riversites$Mnomen*riversites$Month+riversites$Enviro)
 
 # Richness
 rich_noamphi<-read.table("rich_no_amphi.txt",header=TRUE)
 rich_noamphi<-cbind(riverrich,rich_noamphi)
 
 summary(aov(rich_noamphi$R~rich_noamphi$Rice*rich_noamphi$Month+rich_noamphi$Enviro)) #two-way ANOVA
+
+
+# April 27 2026 -- redoing analyses with type II SS based on reviewer comments
+
+library(car)
+
+#diversity
+Anova(lm(Diversity ~ Mnomen * Month + Site, data=riverdiv, type=2))
+
+#richness
+Anova(lm(Richness ~ Mnomen * Month + Site, data=riverrich, type=2))
+
+#and now without the amphipods
+
+Anova(lm(Simpsons ~ Rice * Month + Site, data=riverdiv_no_amphi, type=2))
+Anova(lm(R ~ Mnomen * Month + Site, data=rich_noamphi, type=2))
+
+
+#and the indicator taxon analysis
+library(indicspecies)
+indicmonth<-multipatt(river,riversites$Month)
+indicrice<-multipatt(river,riversites$Mnomen)
+
+summary(indicmonth)
+summary(indicrice)

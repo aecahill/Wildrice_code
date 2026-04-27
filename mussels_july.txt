@@ -1,0 +1,16 @@
+River	Real_Fake	Box	Taxon	Count	Location
+KR	Artificial	16	mussel	14	Downstream
+KR	Artificial	J	mussel	4	Midstream
+KR	Artificial	K	mussel	9	Upstream
+KR	Artificial	B	mussel	4	Midstream
+KR	Artificial	H	mussel	31	Upstream
+KR	Artificial	A	mussel	27	Upstream
+KR	Artificial	13	mussel	1	Downstream
+KR	Artificial	G	mussel	34	Downstream
+KR	Real	19	mussel	4	Midstream
+KR	Real	23	mussel	5	Upstream
+KR	Real	M	mussel	3	Upstream
+KR	Real	1	mussel	3	Downstream
+KR	Real	F	mussel	3	Midstream
+KR	Real	C	mussel	1	Downstream
+KR	Real	L	mussel	8	Upstream
