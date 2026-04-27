@@ -49,14 +49,14 @@ head(species.scores)
 
 #make hulls, one for each sea
 
-grp.a <- data.scores[datascores$Month == "A_June", ][chull(datascores[datascores$Month == 
-                                                                       "A_June", c("NMDS1", "NMDS2")]), ]
-grp.b <- data.scores[datascores$Month == "B_August", ][chull(datascores[datascores$Month == 
-                                                                      "B_August", c("NMDS1", "NMDS2")]), ]
-grp.c <- data.scores[datascores$Month == "C_October", ][chull(datascores[datascores$Month == 
-                                                                         "C_October", c("NMDS1", "NMDS2")]), ]
+grp.a <- data.scores[datascores$Month == "June", ][chull(datascores[datascores$Month == 
+                                                                       "June", c("NMDS1", "NMDS2")]), ]
+grp.b <- data.scores[datascores$Month == "August", ][chull(datascores[datascores$Month == 
+                                                                      "August", c("NMDS1", "NMDS2")]), ]
+grp.c <- data.scores[datascores$Month == "October", ][chull(datascores[datascores$Month == 
+                                                                         "October", c("NMDS1", "NMDS2")]), ]
 hull.data <- rbind(grp.a, grp.b,grp.c) #turn the hulls into a single dataframe
-hull.month<-c("A_June","A_June","A_June","A_June","A_June","A_June","A_June","August","August","August","August","August","August","October","October","October","October","October","October","October","October") #add column for groups (these are based on this data only)
+hull.month<-c("June","June","June","June","June","June","June","August","August","August","August","August","August","October","October","October","October","October","October","October","October") #add column for groups (these are based on this data only)
 hull.data<-cbind(hull.data,hull.month) #attach group names to hull dataframe
 
 #plot in ggplot
@@ -117,7 +117,7 @@ colnames(riverdiv)<-c("Diversity","Enviro","Month","Site","Replicate","Mnomen") 
 
 summary(aov(riverdiv$Diversity~riverdiv$Mnomen*riverdiv$Month+riverdiv$Enviro)) #two-way ANOVA
 
-
+riverdiv$Month<-factor(riverdiv$Month,levels=c("June","August","October"))
 
 diversityfig<-ggplot(riverdiv,aes(x=Month,y=Diversity,fill=Mnomen))+
   geom_boxplot()+ 
@@ -144,6 +144,9 @@ summary(aov(riverrich$Richness~riverrich$Mnomen*riverrich$Month+riverrich$Enviro
 
 #car::Anova(ricerich.lm, type = 3)
 
+riverrich$Month<-factor(riverrich$Month,levels=c("June","August","October"))
+
+
 richnessfig<-ggplot(riverrich,aes(x=Month,y=Richness,fill=Mnomen))+
   geom_boxplot()+ 
   geom_point(alpha=0.6, position=position_jitterdodge(0.2))+
@@ -165,12 +168,14 @@ plot_grid(richnessfig,diversityfig,labels=c("A","B"),ncol=1)
 #Composition plot tries, March 6 start, from ASUS code
 #make collapsed list of taxa across months
 ricecomp<-cbind(river,riversites)
+ricecomp$Month<-factor(ricecomp$Month,levels=c("June","August","October"))
+
 
 sites<-c(1:ncol(river))
 b = NULL
 
 for (i in sites) {
-  collapsed<-tapply(ricecomp[,i],ricecomp$Enviro,sum)
+  collapsed<-tapply(ricecomp[,i],ricecomp$Site,sum)
   b<-cbind(b,collapsed)
   
 }
@@ -212,14 +217,14 @@ morphofiltered<-pivot_longer(filtered_scale, cols=1:(ncol(filtered)-1),
 compositionplotSite <-ggplot(morphofiltered, aes(x=sitenames, y=as.numeric(value), fill=name)) +
   geom_bar(stat="identity") + 
   theme_bw()+
-  theme(panel.grid.minor=element_blank(), panel.grid.major=element_blank())+
   xlab("Site")+
   theme(axis.title.x = element_text(size=12))+
   theme(axis.title.y=element_text(size=12))+
   scale_fill_brewer( type = "div" , palette = "Set3" ) +
   theme_bw() + ylab("Abundance\n") + 
   theme(legend.position="none")+
-  theme(axis.text.x= element_text(angle = 90))
+  theme(axis.text.x= element_text(angle = 90))+
+  theme(panel.grid.minor=element_blank(), panel.grid.major=element_blank())
 
 #OK, let's try it again for the months, that is, collapsing across sites
 ricecomp<-cbind(river,riversites)
@@ -265,19 +270,19 @@ filtered_month<-read.table("scalebymonth.txt",header=TRUE) #scaling to correct f
 
 morphofiltered<-pivot_longer(filtered_month, cols=1:(ncol(filtered)-1), 
                              values_to = "value", values_drop_na = FALSE)
-
+morphofiltered$monthnames<-factor(morphofiltered$monthnames,levels=c("June","August","October"))
 
 compositionplotMonth <-ggplot(morphofiltered, aes(x=monthnames, y=as.numeric(value), fill=name)) +
   geom_bar(stat="identity") + 
   theme_bw()+
-  theme(panel.grid.minor=element_blank(), panel.grid.major=element_blank())+
   xlab("Month")+
   theme(axis.title.x = element_text(size=12))+
   theme(axis.title.y=element_text(size=12))+
   scale_fill_brewer( type = "div" , palette = "Set3" ) +
   theme_bw() + ylab("Abundance\n") + 
   theme(legend.position="none")+
-  theme(axis.text.x= element_text(angle = 90))
+  theme(axis.text.x= element_text(angle = 90))+
+  theme(panel.grid.minor=element_blank(), panel.grid.major=element_blank())
 
 
 #Now let's try with and without rice
@@ -329,13 +334,13 @@ morphofiltered<-pivot_longer(filtered, cols=1:(ncol(filtered)-1),
 compositionplotRice <-ggplot(morphofiltered, aes(x=ricenames, y=as.numeric(value), fill=name)) +
   geom_bar(stat="identity") + 
   theme_bw()+
-  theme(panel.grid.minor=element_blank(), panel.grid.major=element_blank())+
   xlab("Mnomen")+
   theme(axis.title.x = element_text(size=12))+
   theme(axis.title.y=element_text(size=12))+
   scale_fill_brewer( type = "div" , palette = "Set3" ) +
   theme_bw() + ylab("Abundance\n") + 
-  theme(axis.text.x= element_text(angle = 90))
+  theme(axis.text.x= element_text(angle = 90))+
+  theme(panel.grid.minor=element_blank(), panel.grid.major=element_blank())
 
 
 
